@@ -1,0 +1,41 @@
+version: "3.3"
+services:
+  #######################################
+  # NODEJS BACKEND API
+  #######################################
+  nodeserver:
+    build: ./
+    ports:
+      - "5000:5000"
+    networks:
+      - my-app
+    volumes:
+      - upload-data:/usr/src/app/public/uploads
+    depends_on: 
+      - mongo
+    env_file:
+      - ./config/config.env
+  
+  #######################################
+  # MONGODB
+  #######################################
+  mongo:
+    image: mongo:latest
+    ports: 
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_DATABASE=myappdb
+    networks: 
+      - my-app
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  my-app:
+    driver: bridge
+
+volumes:
+  upload-data:
+    driver: local
+  mongo-data:
+    driver: local

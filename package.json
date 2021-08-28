@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=production node server",
-    "dev": "nodemon server"
+    "dev": "nodemon server",
+    "postinstall": "node ./scripts/post-install.js"
   },
   "author": "Arkan Haryo",
   "license": "ISC",
@@ -24,6 +25,7 @@
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.2",
+    "fs-extra": "^9.0.1",
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.11",
     "passport": "^0.4.1",
