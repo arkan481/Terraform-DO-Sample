@@ -1,0 +1,21 @@
+# local .terraform dir
+.terraform
+
+# tf state files
+*.tfstate
+*.tfstate.*
+
+# tf variable files, mac include sensitive data
+*.tfvars
+
+# Crash log
+crash.log
+
+# Env variables
+*.env
+
+# Node modules
+node_modules
+
+# Local upload file
+public/uploads/*
