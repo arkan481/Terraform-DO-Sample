@@ -5,7 +5,7 @@
 *.tfstate
 *.tfstate.*
 
-# tf variable files, mac include sensitive data
+# tf variable files, may include sensitive data
 *.tfvars
 
 # Crash log
@@ -19,3 +19,9 @@ node_modules
 
 # Local upload file
 public/uploads/*
+
+# Certificate file
+*.crt
+
+# Resource assets that contains db secret
+resource_assets.txt

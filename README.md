@@ -7,6 +7,11 @@
 ## Branching Strategy
 ![Git Workflow](GitWorkflow.png "Git Workflow")
 
+## To-Do
+- [ ] Make file for terraform operations.
+- [ ] Delete resource_assets.txt when destroying terraform resources.
+- [ ] User and password for mongodb DigitalOcean resource.
+
 ## Author
 
 👤 **Arkan Haryo**
