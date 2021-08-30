@@ -19,10 +19,6 @@ resource "digitalocean_droplet" "main-droplet" {
   region = var.region
   size   = var.droplet_size
   tags   = [digitalocean_tag.environment-tag.id, digitalocean_tag.terraform.id]
-
-  provisioner "local-exec" {
-    command = "echo 'MAIN_DROPLET_PUBLIC_IP=${self.ipv4_address}' >> ./environments/${terraform.workspace}/resource_assets.txt"
-  }
 }
 
 # Create a mongodb database
@@ -34,10 +30,23 @@ resource "digitalocean_database_cluster" "mongo-db" {
   region     = var.region
   node_count = var.mongodb_node_count
   tags   = [digitalocean_tag.environment-tag.id, digitalocean_tag.terraform.id]
+}
 
-  provisioner "local-exec" {
-    command = "echo 'MONGO_DB_HOST=${self.host}' >> ./environments/${terraform.workspace}/resource_assets.txt"
+# Create a firewall rule to blacklist any connection to MongoDB except for the droplet
+resource "digitalocean_database_firewall" "mongodb-firewall" {
+  cluster_id = digitalocean_database_cluster.mongo-db.id
+
+  rule {
+    type = "droplet"
+    value = digitalocean_droplet.main-droplet.id
   }
+}
+
+# Create a MongoDB database user that will be used for the droplet connection
+resource "digitalocean_database_user" "mongodb-user" {
+  cluster_id = digitalocean_database_cluster.mongo-db.id
+
+  name = var.mongodb_user
 }
 
 # Create an environment tag

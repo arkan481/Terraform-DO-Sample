@@ -46,3 +46,7 @@ variable "mongodb_version" {
 variable "mongodb_node_count" {
   type = number
 }
+
+variable "mongodb_user" {
+  type = string
+}

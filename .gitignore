@@ -24,4 +24,4 @@ public/uploads/*
 *.crt
 
 # Resource assets that contains db secret
-resource_assets.txt
+resource_assets.json
