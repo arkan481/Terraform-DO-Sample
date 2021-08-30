@@ -18,6 +18,12 @@
 - [x] Update all sample files.
 - [x] Document Terraform operations.
 
+### Docker Build and Push
+- [ ] Configure Docker private repository.
+- [ ] Tag the image with Docker private repository url.
+- [ ] Configure automatic tagging with the latest tag.
+- [ ] more...
+
 ## Local Setup
 Fill in every environment variables in config/config.env file.
 
