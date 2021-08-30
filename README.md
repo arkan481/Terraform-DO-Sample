@@ -14,10 +14,9 @@
 - [x] User and password for mongodb DigitalOcean resource.
 - [x] Whitelist IP for the droplet's IP only.
 - [x] Migrate local-exec provisioner to outputs.
-- [ ] Create DigitalOcean mongodb module.
 - [x] Check to see wether or not the droplet can connect to mongodb cluster without crt (You can't), workaround is to download the crt file from DO's GUI console, put the crt file into the application itself, so if in the future the crt change, the app / image needs to be built again, see [Is it possible to download the managed database's ca-certificate.crt using the DO API, or similar?](https://www.digitalocean.com/community/questions/is-it-possible-to-download-the-managed-database-s-ca-certificate-crt-using-the-do-api-or-similar).
 - [x] Update all sample files.
-- [ ] Document Terraform operations.
+- [x] Document Terraform operations.
 
 ## Local Setup
 Fill in every environment variables in config/config.env file.
