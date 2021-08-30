@@ -5,6 +5,7 @@ services:
   #######################################
   nodeserver:
     build: ./
+    entrypoint: [ "npm", "run", "dev" ]
     ports:
       - "5000:5000"
     networks:

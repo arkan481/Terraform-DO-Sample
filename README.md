@@ -19,6 +19,62 @@
 - [x] Update all sample files.
 - [ ] Document Terraform operations.
 
+## Local Setup
+Fill in every environment variables in config/config.env file.
+
+Then run:
+
+```zsh
+make run-local
+```
+
+This will use docker-compose to build the application into a docker image and then run it alongside a Mongo DB container, with the environment sets to `development`.
+
+## Terraform
+### The Terraform configuration provisions:
+- DigitalOcean Droplet
+- DigitalOcean MongoDB Cluster
+
+### Using the Terraform config requires:
+1. A DigitalOcean access token
+
+### The Terraform configuration configure these environments:
+1. staging
+2. production
+
+### 🚀 Spinning up an environment
+1. Fill in all of the tfvars file, in the particular environment dir and the common.tfvars file located inside the root of environments dir.
+2. Spin up your environment by running:
+```zsh
+ENV=env-name TF_ACTION=apply make terraform-action
+```
+
+### 🌟 Creating a new environment
+> 💡 DigitalOcean's project resource can only have 3 environments value, they are: `Development`, `Staging`, and `Production`.
+1. Create a new terraform environment directory under /terraform/environments and copy the tfvars file from other environments.
+2. Create a new terraform workspace by running:
+```zsh
+ENV=new-env-name make terraform-create-workspace
+```
+3. Initiate the new Terraform workspace environment by running:
+```zsh
+ENV=new-env-name make terraform-init
+```
+4. Spin up your new environment by running:
+```zsh
+ENV=new-env-name TF_ACTION=apply make terraform-action
+```
+
+### 🧨 Cleaning up an environment
+1. Clean up your Terraform resources by runnning:
+```zsh
+ENV=new-env-name TF_ACTION=destroy make terraform-action
+```
+
+### 📜 After spinning up an environment
+After spinning up an environment you will get every output that were exported into a json file named `resource_assets.json` that contains necessary credentials for your infrastructure.
+
+
 ## Where to go After This?
 `Learn Ansible` for server management tools, because Terraform is used only for provisioning or in other words creating a server, after we've created a server we need to manage it (installing apps, running docker, upgrading, etc.) So wee need to use a configuration management tools such as Ansible.
 
