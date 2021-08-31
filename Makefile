@@ -1,7 +1,8 @@
 run-local:
 	docker-compose up
 
-### COMMONS ###
+### COMMON ###
+
 check-env:
 ifndef ENV
 		$(error Please set ENV=[staging|production])
@@ -36,3 +37,16 @@ else ifeq ($(TF_ACTION), apply)
 	@cd terraform && \
 		echo $$(terraform output -json) > ./environments/$(ENV)/resource_assets.json
 endif
+
+## DOCKER BUILD AND PUSH OPERATIONS
+
+GITHUB_REF?=latest
+LOCAL_TAG=express-auth:$(subst refs/tags/,,$(GITHUB_REF))
+REMOTE_TAG=arkan481/$(LOCAL_TAG)
+
+build:
+	docker build -t $(LOCAL_TAG) .
+
+push:
+	docker tag $(LOCAL_TAG) $(REMOTE_TAG)
+	docker push $(REMOTE_TAG)

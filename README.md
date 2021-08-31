@@ -19,10 +19,10 @@
 - [x] Document Terraform operations.
 
 ### Docker Build and Push
-- [ ] Configure Docker private repository.
-- [ ] Tag the image with Docker private repository url.
-- [ ] Configure automatic tagging with the latest tag.
-- [ ] more...
+- [x] Configure Docker private repository.
+- [x] Tag the image with Docker private repository url.
+- [ ] Configure automatic tagging with Git SHA.
+- [ ] Document Build and Push operations.
 
 ## Local Setup
 Fill in every environment variables in config/config.env file.
