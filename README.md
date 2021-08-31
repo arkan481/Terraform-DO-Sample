@@ -21,8 +21,9 @@
 ### Docker Build and Push
 - [x] Configure Docker private repository.
 - [x] Tag the image with Docker private repository url.
-- [ ] Configure automatic tagging with Git SHA.
-- [ ] Document Build and Push operations.
+- [x] Configure automatic tagging with Git tags.
+- [x] Push the built Docker image to DockerHub by using GitHub action.
+- [x] Document Build and Push operations.
 
 ## Local Setup
 Fill in every environment variables in config/config.env file.
@@ -79,6 +80,33 @@ ENV=new-env-name TF_ACTION=destroy make terraform-action
 ### 📜 After spinning up an environment
 After spinning up an environment you will get every output that were exported into a json file named `resource_assets.json` that contains necessary credentials for your infrastructure.
 
+## Docker Build and Push
+### 📀 Building the new Docker image
+1. Make sure to fill in all of the necessary env variable in /config/config.env, or pass this during the `docker run` command.
+2. MAKE SURE to put the `mongodb` crt file `BEFORE` building the image for production environment.
+3. Finally to build your new Docker image locally, run this command:
+```zsh
+make build
+```
+
+### ☄️ Pushing the new Docker Image
+1. Build your Docker image using the steps above.
+2. Change the REMOTE_TAG variable in Makefile with your own DockerHub username.
+3. Push your Docker image to DockerHub locally by running this command:
+```zsh
+make push
+```
+
+## GitHub Action
+### ✒️ Requirements
+This GitHub Action config will require these following secrets to be stored in GitHub repo.
+1. DOCKERHUB_USERNAME  
+Which contains a string of your DockerHub username.
+2. DOCKERHUB_TOKEN
+Which contains a string of your DockerHub access token.
+
+### 🧙‍♂️ Workflow
+`.github/workflows/build-push-deploy.yaml` contains a workflow which deploys to a `staging` environment on pushes to tags with prefix of `v\d+\.\d+\.\d+\-alpha.\d+`, ex: `v1.0.0-alpha.1` and to a `production` environment on pushes of tags of the form `v\d+\.\d+\.\d+`, ex: `v1.0.0`. It also push a Docker image to Docker Hub tagged with the push tag of GitHub tag.
 
 ## Where to go After This?
 `Learn Ansible` for server management tools, because Terraform is used only for provisioning or in other words creating a server, after we've created a server we need to manage it (installing apps, running docker, upgrading, etc.) So wee need to use a configuration management tools such as Ansible.

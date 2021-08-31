@@ -40,7 +40,10 @@ endif
 
 ## DOCKER BUILD AND PUSH OPERATIONS
 
+# GITHUB_REF is an environment variable in the source computer of GitHub Actions, the values is like this:
+# refs/head/master OR refs/tags/x.x.x.x
 GITHUB_REF?=latest
+# since we only trigger GitHub actions by a tag push, we call subst function to retrieves only the tag, removing the refs/other-unnecessary-string/
 LOCAL_TAG=express-auth:$(subst refs/tags/,,$(GITHUB_REF))
 REMOTE_TAG=arkan481/$(LOCAL_TAG)
 
