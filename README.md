@@ -25,6 +25,10 @@
 - [x] Push the built Docker image to DockerHub by using GitHub action.
 - [x] Document Build and Push operations.
 
+### Verify Image Working
+- [ ] Test image locally with both development and production environment.
+- [ ] More...
+
 ## Local Setup
 Fill in every environment variables in config/config.env file.
 
