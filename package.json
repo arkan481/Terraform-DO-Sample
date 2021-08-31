@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=production node server",
-    "dev": "nodemon server",
-    "postinstall": "node ./scripts/post-install.js"
+    "dev": "nodemon server"
   },
   "author": "Arkan Haryo",
   "license": "ISC",
