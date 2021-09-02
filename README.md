@@ -30,6 +30,13 @@
 - [x] Environment variable clean up.
 - [x] Document the image requirements.
 
+### DOCTL
+- [ ] Configure Docker login in droplet.
+- [ ] Deploy the app using `docker run` command.
+- [ ] Store every environment variables in GitHub secret.
+- [ ] Old image and container clean up.
+- [ ] More...
+
 ## Local Setup
 Fill in every environment variables in config/config.env file.
 
