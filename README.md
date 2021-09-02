@@ -28,8 +28,7 @@
 ### Verify Image Working
 - [x] Test image locally with both development and production environment.
 - [x] Environment variable clean up.
-- [ ] Document the image requirements.
-- [ ] More...
+- [x] Document the image requirements.
 
 ## Local Setup
 Fill in every environment variables in config/config.env file.
