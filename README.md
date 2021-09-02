@@ -26,7 +26,9 @@
 - [x] Document Build and Push operations.
 
 ### Verify Image Working
-- [ ] Test image locally with both development and production environment.
+- [x] Test image locally with both development and production environment.
+- [x] Environment variable clean up.
+- [ ] Document the image requirements.
 - [ ] More...
 
 ## Local Setup
@@ -39,6 +41,13 @@ make run-local
 ```
 
 This will use docker-compose to build the application into a docker image and then run it alongside a Mongo DB container, with the environment sets to `development`.
+
+## The Image
+### Requirements
+1. Fill in all of the config.env fields.
+2. Google authentication client ID and secret.
+3. Registered domain for `Authorized redirect URIs` in Google console.
+4. For `production` use, you need a DigitalOcean mongodb TLS crt file, download and put it in `config/`, only then you can proceed to build the image for production use.
 
 ## Terraform
 ### The Terraform configuration provisions:

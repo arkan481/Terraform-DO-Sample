@@ -14,6 +14,8 @@ services:
       - upload-data:/usr/src/app/public/uploads
     depends_on: 
       - mongo
+    environment: 
+      - MONGO_URI_DEVELOPMENT=mongodb://mongo:27017/myappdb
     env_file:
       - ./config/config.env
   
