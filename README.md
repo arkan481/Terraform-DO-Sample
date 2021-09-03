@@ -31,12 +31,14 @@
 - [x] Document the image requirements.
 
 ### DOCTL
-- [ ] Create a SSH key resource using Terraform
-- [ ] Confiture Droplet's SSH key using Terraform.
-- [ ] Configure Docker login in droplet.
-- [ ] Deploy the app using `docker run` command.
+- [x] Create a SSH key resource using Terraform
+- [x] Confiture Droplet's SSH key using Terraform.
+- [x] Configure Docker login in droplet.
+- [x] Deploy the app using `docker run` command.
+- [x] Separate crt file for production and staging env.
 - [ ] Store every environment variables in GitHub secret.
-- [ ] Old image and container clean up.
+- [x] Old image and container clean up.
+- [ ] Documents the requirements of the deployment process.
 - [ ] More...
 
 ## Local Setup
@@ -130,7 +132,9 @@ Which contains a string of your DockerHub access token.
 `.github/workflows/build-push-deploy.yaml` contains a workflow which deploys to a `staging` environment on pushes to tags with prefix of `v\d+\.\d+\.\d+\-alpha.\d+`, ex: `v1.0.0-alpha.1` and to a `production` environment on pushes of tags of the form `v\d+\.\d+\.\d+`, ex: `v1.0.0`. It also push a Docker image to Docker Hub tagged with the push tag of GitHub tag.
 
 ## Where to go After This?
-`Learn Ansible` for server management tools, because Terraform is used only for provisioning or in other words creating a server, after we've created a server we need to manage it (installing apps, running docker, upgrading, etc.) So wee need to use a configuration management tools such as Ansible.
+- Use a domain with SSL cert as a part of the deployment.
+- Learn to develop a Telegram bot to automate change log notify system to a group chat.
+- `Learn Ansible` for server management tools, because Terraform is used only for provisioning or in other words creating a server, after we've created a server we need to manage it (installing apps, running docker, upgrading, etc.) So wee need to use a configuration management tools such as Ansible.
 
 ## Author
 

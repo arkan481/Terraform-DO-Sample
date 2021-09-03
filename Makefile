@@ -18,6 +18,19 @@ remove-ssh-key:  check-env
 	cd terraform/environments/$(ENV) && \
 		rm -R .ssh
 
+### DOCTL OPERATIONS ###
+
+DROPLET_NAME=my-app-$(ENV)
+
+ssh: check-env
+	doctl compute ssh $(DROPLET_NAME) \
+		--ssh-key-path=./terraform/environments/$(ENV)/.ssh/id_rsa
+
+ssh-cmd: check-env
+	@doctl compute ssh $(DROPLET_NAME) \
+		--ssh-key-path=./terraform/environments/$(ENV)/.ssh/id_rsa \
+		--ssh-command="$(CMD)"
+
 ### TERRAFORM OPERATIONS ###
 
 terraform-create-workspace: check-env
@@ -61,8 +74,34 @@ LOCAL_TAG=express-auth:$(subst refs/tags/,,$(GITHUB_REF))
 REMOTE_TAG=arkan481/$(LOCAL_TAG)
 
 build:
-	docker build -t $(LOCAL_TAG) .
+	docker build -t $(LOCAL_TAG) --platform linux/amd64 .
 
 push:
 	docker tag $(LOCAL_TAG) $(REMOTE_TAG)
 	docker push $(REMOTE_TAG)
+
+CONTAINER_NAME=myapp-api
+deploy: check-env
+	@$(MAKE) ssh-cmd CMD='docker login --username $(DOCKER_USERNAME) --password $(DOCKER_PASSWORD)'
+	@echo "Pulling the new Docker image..."
+	$(MAKE) ssh-cmd CMD='docker pull $(REMOTE_TAG)'
+	@echo "removing the old container..."
+	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
+	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
+	@echo "starting the new container..."
+	$(MAKE) ssh-cmd CMD='\
+						docker run -d --name=$(CONTAINER_NAME) \
+						--restart=unless-stopped \
+						-p 80:5000 \
+						-e NODE_ENV=production \
+						-e PORT=$(PORT) \
+						-e MONGO_URI_PRODUCTION="mongodb+srv://$(MONGODB_USER_$(ENV)):$(MONGODB_PASSWORD_$(ENV))@$(MONGODB_HOST_$(ENV))" \
+						-e GOOGLE_CLIENT_ID=$(GOOGLE_CLIENT_ID) \
+						-e GOOGLE_CLIENT_SECRET=$(GOOGLE_CLIENT_SECRET) \
+						-e FILE_UPLOAD_PATH=./public/uploads \
+						-e MAX_FILE_UPLOAD=300000 \
+						-e JWT_SECRET=$(JWT_SECRET) \
+						-e JWT_EXPIRE=$(JWT_EXPIRE) \
+						-e JWT_COOKIE_EXPIRE=$(JWT_COOKIE_EXPIRE) \
+						-e MONGO_CA_CERT_PATH=config/ca-certificate-$(ENV).crt \
+						$(REMOTE_TAG)'
