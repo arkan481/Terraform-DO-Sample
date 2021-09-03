@@ -30,16 +30,22 @@
 - [x] Environment variable clean up.
 - [x] Document the image requirements.
 
-### DOCTL
+### DOCTL Deployment (Manual Deployment)
 - [x] Create a SSH key resource using Terraform
 - [x] Confiture Droplet's SSH key using Terraform.
 - [x] Configure Docker login in droplet.
 - [x] Deploy the app using `docker run` command.
 - [x] Separate crt file for production and staging env.
-- [ ] Store every environment variables in GitHub secret.
 - [x] Old image and container clean up.
+- [x] Documents the requirements of the deployment process.
+
+### GitHub Action Deployment (Automatic Deployment)
+- [ ] Store every environment variables in GitHub secret.
+- [ ] Separate environment variable for staging and production.
+- [ ] Create a mechanism to detect which environments is currently targeted.
 - [ ] Documents the requirements of the deployment process.
 - [ ] More...
+
 
 ## Local Setup
 Fill in every environment variables in config/config.env file.
@@ -131,9 +137,29 @@ Which contains a string of your DockerHub access token.
 ### 🧙‍♂️ Workflow
 `.github/workflows/build-push-deploy.yaml` contains a workflow which deploys to a `staging` environment on pushes to tags with prefix of `v\d+\.\d+\.\d+\-alpha.\d+`, ex: `v1.0.0-alpha.1` and to a `production` environment on pushes of tags of the form `v\d+\.\d+\.\d+`, ex: `v1.0.0`. It also push a Docker image to Docker Hub tagged with the push tag of GitHub tag.
 
+## DOCTL
+### 📈 Usage 
+This project use DigitalOcean's official CLI tool called DOCTL, the usage of this CLI tools is to:
+1. Accessing droplet using SSH depending to the specified environment by running:
+```zsh
+ENV=<your-own-environment | staging | production> make ssh
+```
+2. Issuing a command to droplet using SSH depending to the specified environment by running:
+```zsh
+ENV=<your-own-environment | staging | production> make ssh-cmd CMD="your-command-goes-here"
+```
+3. Issuing a deployment that triggers docker login, image pull, and image re-run to droplet using SSH with CMD to the specified environment by running:
+```zsh
+ENV=<your-own-environment | staging | production> make deploy DOCKER_USERNAME=changeme DOCKER_PASSWORD=changeme PORT=5000 MONGODB_USER_<your-own-environment | staging | production>=changeme MONGODB_PASSWORD_<your-own-environment | staging | production>=changeme MONGODB_HOST_<your-own-environment | staging | production>=changeme GOOGLE_CLIENT_ID=changeme GOOGLE_CLIENT_SECRET=changeme JWT_SECRET=changeme JWT_EXPIRE=changeme JWT_COOKIE_EXPIRE=changeme
+```
+> 💡 You should find most of the value of the environment variables in `terraform/environemnts/<your-own-environment | staging | production>/resource_assets.json`
+
+### Requirements
+1. In order to deploy the app you need to download the mongodb tls cert using digital ocean console, and you should format the file name to this: `ca-certificate-<your-own-environment | staging | production>.crt`
+
 ## Where to go After This?
 - Use a domain with SSL cert as a part of the deployment.
-- Learn to develop a Telegram bot to automate change log notify system to a group chat.
+- Learn to develop a Telegram bot to automate change log notifying system to a group chat.
 - `Learn Ansible` for server management tools, because Terraform is used only for provisioning or in other words creating a server, after we've created a server we need to manage it (installing apps, running docker, upgrading, etc.) So wee need to use a configuration management tools such as Ansible.
 
 ## Author
