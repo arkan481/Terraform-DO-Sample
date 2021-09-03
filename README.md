@@ -31,6 +31,8 @@
 - [x] Document the image requirements.
 
 ### DOCTL
+- [ ] Create a SSH key resource using Terraform
+- [ ] Confiture Droplet's SSH key using Terraform.
 - [ ] Configure Docker login in droplet.
 - [ ] Deploy the app using `docker run` command.
 - [ ] Store every environment variables in GitHub secret.

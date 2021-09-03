@@ -8,6 +8,16 @@ ifndef ENV
 		$(error Please set ENV=[staging|production])
 endif
 
+create-ssh-key: check-env
+	cd terraform/environments/$(ENV) && \
+		mkdir .ssh && \
+			cd .ssh && \
+				ssh-keygen -f id_rsa -t rsa -N ""
+
+remove-ssh-key:  check-env
+	cd terraform/environments/$(ENV) && \
+		rm -R .ssh
+
 ### TERRAFORM OPERATIONS ###
 
 terraform-create-workspace: check-env
@@ -26,6 +36,9 @@ terraform-json-output: check-env
 
 TF_ACTION?=plan
 terraform-action: check-env
+ifeq ($(TF_ACTION), apply)
+	$(MAKE) create-ssh-key
+endif
 	@cd terraform && \
 		terraform workspace select $(ENV) && \
 		terraform $(TF_ACTION) \
@@ -33,9 +46,9 @@ terraform-action: check-env
 		-var-file="./environments/$(ENV)/config.tfvars"
 ifeq ($(TF_ACTION), destroy)
 	rm ./terraform/environments/$(ENV)/resource_assets.json
+	$(MAKE) remove-ssh-key
 else ifeq ($(TF_ACTION), apply) 
-	@cd terraform && \
-		echo $$(terraform output -json) > ./environments/$(ENV)/resource_assets.json
+	$(MAKE) terraform-json-output
 endif
 
 ## DOCKER BUILD AND PUSH OPERATIONS

@@ -12,12 +12,18 @@ provider "digitalocean" {
   token = var.do_token
 }
 
+resource "digitalocean_ssh_key" "my-app-default" {
+  name = "MyApp Default"
+  public_key = file("./environments/${terraform.workspace}/.ssh/id_rsa.pub")
+}
+
 # Create a droplet for the app
 resource "digitalocean_droplet" "main-droplet" {
   image  = var.droplet_image
   name   = "${var.app_name}-${terraform.workspace}"
   region = var.region
   size   = var.droplet_size
+  ssh_keys = [ digitalocean_ssh_key.my-app-default.fingerprint ]
   tags   = [digitalocean_tag.environment-tag.id, digitalocean_tag.terraform.id]
 }
 
