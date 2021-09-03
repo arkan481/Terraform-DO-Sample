@@ -40,6 +40,7 @@
 - [x] Documents the requirements of the deployment process.
 
 ### GitHub Action Deployment (Automatic Deployment)
+- [ ] Figure out a way to make a temp dir of .ssh and create id_rsa file in GitHub Action instance under `terraform/environments/some-env/` in order to support use `doctl compute ssh` command.
 - [ ] Store every environment variables in GitHub secret.
 - [ ] Separate environment variable for staging and production.
 - [ ] Create a mechanism to detect which environments is currently targeted.
