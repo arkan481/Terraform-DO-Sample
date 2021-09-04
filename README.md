@@ -40,12 +40,11 @@
 - [x] Documents the requirements of the deployment process.
 
 ### GitHub Action Deployment (Automatic Deployment)
-- [ ] Figure out a way to make a temp dir of .ssh and create id_rsa file in GitHub Action instance under `terraform/environments/some-env/` in order to support use `doctl compute ssh` command.
-- [ ] Store every environment variables in GitHub secret.
-- [ ] Separate environment variable for staging and production.
-- [ ] Create a mechanism to detect which environments is currently targeted.
-- [ ] Documents the requirements of the deployment process.
-- [ ] More...
+- [x] Figure out a way to make a temp dir of .ssh and create id_rsa file in GitHub Action instance under `terraform/environments/some-env/` in order to support the use of `doctl compute ssh` command.
+- [x] Store every environment variables in GitHub secret.
+- [x] Separate environment variable for staging and production.
+- [x] Create a mechanism to detect which environments is currently targeted.
+- [x] Fix ENV prefix for `make` deploy script, just remove the environment string.
 
 
 ## Local Setup
@@ -159,6 +158,7 @@ ENV=<your-own-environment | staging | production> make deploy DOCKER_USERNAME=ch
 1. In order to deploy the app you need to download the mongodb tls cert using digital ocean console, and you should format the file name to this: `ca-certificate-<your-own-environment | staging | production>.crt`
 
 ## Where to go After This?
+- Use secret manager for convenience.
 - Use a domain with SSL cert as a part of the deployment.
 - Learn to develop a Telegram bot to automate change log notifying system to a group chat.
 - `Learn Ansible` for server management tools, because Terraform is used only for provisioning or in other words creating a server, after we've created a server we need to manage it (installing apps, running docker, upgrading, etc.) So wee need to use a configuration management tools such as Ansible.

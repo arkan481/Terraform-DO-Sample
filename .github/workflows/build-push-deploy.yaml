@@ -1,5 +1,7 @@
 name: Build, push to DockerHub and deploy to DigitalOcean Droplet
 
+## NOTE: For whatever reason, the private_key cannot be exported to GITHUB_ENV, as it will throw an error indicating that the format isn't right. So here you see a bunch of repeated step twice with conditionals.
+
 on:
   push:
     tags:
@@ -14,6 +16,51 @@ jobs:
     runs-on: ubuntu-latest
   
     steps:
+      - name: Set ENV
+        # This may could be cleaned up.
+        env:
+          MONGODB_USER_PRODUCTION: ${{ secrets.MONGODB_USER_PRODUCTION }}
+          MONGODB_PASSWORD_PRODUCTION: ${{ secrets.MONGODB_PASSWORD_PRODUCTION }}
+          MONGODB_HOST_PRODUCTION: ${{ secrets.MONGODB_HOST_PRODUCTION }}
+          MONGODB_USER_STAGING: ${{ secrets.MONGODB_USER_STAGING }}
+          MONGODB_PASSWORD_STAGING: ${{ secrets.MONGODB_PASSWORD_STAGING }}
+          MONGODB_HOST_STAGING: ${{ secrets.MONGODB_HOST_STAGING }}
+          PRIVATE_KEY_STAGING: ${{ secrets.PRIVATE_KEY_STAGING }}
+          PRIVATE_KEY_PRODUCTION: ${{ secrets.PRIVATE_KEY_PRODUCTION }}
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRE: ${{ secrets.JWT_EXPIRE }}
+          JWT_COOKIE_EXPIRE: ${{ secrets.JWT_COOKIE_EXPIRE }}
+        run: |-
+          PRODUCTION="v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$"
+          STAGING="v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\-alpha\.[[:digit:]]+$"
+          if [[ ${GITHUB_REF##*/} =~ $STAGING ]]; then
+            echo "ENV=staging" >> $GITHUB_ENV
+            echo "MONGODB_USER=$MONGODB_USER_STAGING" >> $GITHUB_ENV
+            echo "MONGODB_PASSWORD=$MONGODB_PASSWORD_STAGING" >> $GITHUB_ENV
+            echo "MONGODB_HOST=$MONGODB_HOST_STAGING" >> $GITHUB_ENV
+            # echo "PRIVATE_KEY=$PRIVATE_KEY_STAGING" >> $GITHUB_ENV
+          elif [[ ${GITHUB_REF##*/} =~ $PRODUCTION ]]; then
+            echo "ENV=staging" >> $GITHUB_ENV
+            echo "MONGODB_USER=$MONGODB_USER_PRODUCTION" >> $GITHUB_ENV
+            echo "MONGODB_PASSWORD=$MONGODB_PASSWORD_PRODUCTION" >> $GITHUB_ENV
+            echo "MONGODB_HOST=$MONGODB_HOST_PRODUCTION" >> $GITHUB_ENV
+            # echo "PRIVATE_KEY=$PRIVATE_KEY_PRODUCTION" >> $GITHUB_ENV
+          else 
+            echo "Invalid tag, environment not found"
+            exit 1
+          fi
+          echo "DOCKER_USERNAME=$DOCKER_USERNAME" >> $GITHUB_ENV
+          echo "DOCKER_PASSWORD=$DOCKER_PASSWORD" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> $GITHUB_ENV
+          echo "JWT_SECRET=$JWT_SECRET" >> $GITHUB_ENV
+          echo "JWT_EXPIRE=$JWT_EXPIRE" >> $GITHUB_ENV
+          echo "JWT_COOKIE_EXPIRE=$JWT_COOKIE_EXPIRE" >> $GITHUB_ENV
+
       # CHECKING OUT CURRENT SRC CODE VERSION, A MUST!
       - name: Checkout
         uses: actions/checkout@v2
@@ -38,3 +85,60 @@ jobs:
       - name: Push
         run: |-
           make push
+      
+      # Installing DOCTL
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      # Configuring SSH in GitHub action runner / worker for STAGING.
+      - name: Install SSH Key (Staging)
+        if: ${{ env.ENV == 'staging' }} 
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.PRIVATE_KEY_STAGING }} 
+          known_hosts: 'just-a-placeholder-so-we-dont-have-any-errors'
+      
+      # Configuring SSH in GitHub action runner / worker for PRODUCTION.
+      - name: Install SSH Key (Production)
+        if: ${{ env.ENV == 'production' }} 
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.PRIVATE_KEY_PRODUCTION }} 
+          known_hosts: 'just-a-placeholder-so-we-dont-have-any-errors'
+
+      # Adding droplet's known host for STAGING.
+      - name: Adding Known Hosts (Staging)
+        if: ${{ env.ENV == 'staging' }} 
+        run: ssh-keyscan -H ${{ secrets.DROPLET_IP_STAGING }} >> ~/.ssh/known_hosts
+
+      # Adding droplet's known host for PRODUCTION.
+      - name: Adding Known Hosts (Production)
+        if: ${{ env.ENV == 'production' }} 
+        run: ssh-keyscan -H ${{ secrets.DROPLET_IP_PRODUCTION }} >> ~/.ssh/known_hosts
+      
+      # Creating a temp SSH directory and id_rsa private key in order to SSH into the droplet, a bit hacky but this will do for now. STAGING
+      - name: Creating an SSH key (Staging)
+        if: ${{ env.ENV == 'staging' }} 
+        run: |-
+          cd terraform/environments/${ENV}
+          mkdir .ssh
+          cd .ssh
+          echo "${{ secrets.PRIVATE_KEY_STAGING }}" > id_rsa
+          chmod 400 id_rsa
+
+      # Creating a temp SSH directory and id_rsa private key in order to SSH into the droplet, a bit hacky but this will do for now. PRODUCTION
+      - name: Creating an SSH key (Production)
+        if: ${{ env.ENV == 'production' }}
+        run: |-
+          cd terraform/environments/${ENV}
+          mkdir .ssh
+          cd .ssh
+          echo "${{ secrets.PRIVATE_KEY_PRODUCTION }}" > id_rsa
+          chmod 400 id_rsa
+      
+      # Deploying to DigitalOcean droplet corresponding to the targeted environment.
+      - name: Deploy
+        run: |-
+          make deploy

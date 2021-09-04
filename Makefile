@@ -89,14 +89,14 @@ deploy: check-env
 	-$(MAKE) ssh-cmd CMD='docker container stop $(CONTAINER_NAME)'
 	-$(MAKE) ssh-cmd CMD='docker container rm $(CONTAINER_NAME)'
 	@echo "starting the new container..."
-	$(MAKE) ssh-cmd CMD='\
+	@$(MAKE) ssh-cmd CMD='\
 						docker run -d --name=$(CONTAINER_NAME) \
 						--restart=unless-stopped \
 						-p 80:5000 \
 						-e NODE_ENV=production \
-						-e PORT=$(PORT) \
-						-e MONGO_URI_PRODUCTION="mongodb+srv://$(MONGODB_USER_$(ENV)):$(MONGODB_PASSWORD_$(ENV))@$(MONGODB_HOST_$(ENV))" \
-						-e GOOGLE_CLIENT_ID=$(GOOGLE_CLIENT_ID) \
+						-e PORT=5000 \
+						-e MONGO_URI_PRODUCTION="mongodb+srv://$(MONGODB_USER):$(MONGODB_PASSWORD)@$(MONGODB_HOST)" \
+						-e GOOGLE_CLIENT_ID_WEBAPP=$(GOOGLE_CLIENT_ID) \
 						-e GOOGLE_CLIENT_SECRET=$(GOOGLE_CLIENT_SECRET) \
 						-e FILE_UPLOAD_PATH=./public/uploads \
 						-e MAX_FILE_UPLOAD=300000 \
