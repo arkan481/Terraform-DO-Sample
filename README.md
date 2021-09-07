@@ -1,6 +1,7 @@
 # Welcome to TerraformDOSample 👋
 ![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg?cacheSeconds=2592000)
 [![Twitter: arkanharyo](https://img.shields.io/twitter/follow/arkanharyo.svg?style=social)](https://twitter.com/arkanharyo)
+![Build Push Deploy](https://github.com/github/arkan481/Terraform-DO-Sample/actions/workflows/build-push-deploy.yml/badge.svg)
 
 > CI/CD sample with Github Actions and Terraform to automate infrastructure provisioning and deploying to DigitalOcean cloud infrastructure provider.
 
