@@ -7,46 +7,6 @@
 ## Branching Strategy
 ![Git Workflow](GitWorkflow.png "Git Workflow")
 
-## To-Do
-### Terraform
-- [x] Make file for terraform operations.
-- [x] Delete resource_assets.json when destroying terraform resources.
-- [x] User and password for mongodb DigitalOcean resource.
-- [x] Whitelist IP for the droplet's IP only.
-- [x] Migrate local-exec provisioner to outputs.
-- [x] Check to see wether or not the droplet can connect to mongodb cluster without crt (You can't), workaround is to download the crt file from DO's GUI console, put the crt file into the application itself, so if in the future the crt change, the app / image needs to be built again, see [Is it possible to download the managed database's ca-certificate.crt using the DO API, or similar?](https://www.digitalocean.com/community/questions/is-it-possible-to-download-the-managed-database-s-ca-certificate-crt-using-the-do-api-or-similar).
-- [x] Update all sample files.
-- [x] Document Terraform operations.
-
-### Docker Build and Push
-- [x] Configure Docker private repository.
-- [x] Tag the image with Docker private repository url.
-- [x] Configure automatic tagging with Git tags.
-- [x] Push the built Docker image to DockerHub by using GitHub action.
-- [x] Document Build and Push operations.
-
-### Verify Image Working
-- [x] Test image locally with both development and production environment.
-- [x] Environment variable clean up.
-- [x] Document the image requirements.
-
-### DOCTL Deployment (Manual Deployment)
-- [x] Create a SSH key resource using Terraform
-- [x] Confiture Droplet's SSH key using Terraform.
-- [x] Configure Docker login in droplet.
-- [x] Deploy the app using `docker run` command.
-- [x] Separate crt file for production and staging env.
-- [x] Old image and container clean up.
-- [x] Documents the requirements of the deployment process.
-
-### GitHub Action Deployment (Automatic Deployment)
-- [x] Figure out a way to make a temp dir of .ssh and create id_rsa file in GitHub Action instance under `terraform/environments/some-env/` in order to support the use of `doctl compute ssh` command.
-- [x] Store every environment variables in GitHub secret.
-- [x] Separate environment variable for staging and production.
-- [x] Create a mechanism to detect which environments is currently targeted.
-- [x] Fix ENV prefix for `make` deploy script, just remove the environment string.
-
-
 ## Local Setup
 Fill in every environment variables in config/config.env file.
 
@@ -162,6 +122,45 @@ ENV=<your-own-environment | staging | production> make deploy DOCKER_USERNAME=ch
 - Use a domain with SSL cert as a part of the deployment.
 - Learn to develop a Telegram bot to automate change log notifying system to a group chat.
 - `Learn Ansible` for server management tools, because Terraform is used only for provisioning or in other words creating a server, after we've created a server we need to manage it (installing apps, running docker, upgrading, etc.) So wee need to use a configuration management tools such as Ansible.
+
+## To-Do
+### Terraform
+- [x] Make file for terraform operations.
+- [x] Delete resource_assets.json when destroying terraform resources.
+- [x] User and password for mongodb DigitalOcean resource.
+- [x] Whitelist IP for the droplet's IP only.
+- [x] Migrate local-exec provisioner to outputs.
+- [x] Check to see wether or not the droplet can connect to mongodb cluster without crt (You can't), workaround is to download the crt file from DO's GUI console, put the crt file into the application itself, so if in the future the crt change, the app / image needs to be built again, see [Is it possible to download the managed database's ca-certificate.crt using the DO API, or similar?](https://www.digitalocean.com/community/questions/is-it-possible-to-download-the-managed-database-s-ca-certificate-crt-using-the-do-api-or-similar).
+- [x] Update all sample files.
+- [x] Document Terraform operations.
+
+### Docker Build and Push
+- [x] Configure Docker private repository.
+- [x] Tag the image with Docker private repository url.
+- [x] Configure automatic tagging with Git tags.
+- [x] Push the built Docker image to DockerHub by using GitHub action.
+- [x] Document Build and Push operations.
+
+### Verify Image Working
+- [x] Test image locally with both development and production environment.
+- [x] Environment variable clean up.
+- [x] Document the image requirements.
+
+### DOCTL Deployment (Manual Deployment)
+- [x] Create a SSH key resource using Terraform
+- [x] Confiture Droplet's SSH key using Terraform.
+- [x] Configure Docker login in droplet.
+- [x] Deploy the app using `docker run` command.
+- [x] Separate crt file for production and staging env.
+- [x] Old image and container clean up.
+- [x] Documents the requirements of the deployment process.
+
+### GitHub Action Deployment (Automatic Deployment)
+- [x] Figure out a way to make a temp dir of .ssh and create id_rsa file in GitHub Action instance under `terraform/environments/some-env/` in order to support the use of `doctl compute ssh` command.
+- [x] Store every environment variables in GitHub secret.
+- [x] Separate environment variable for staging and production.
+- [x] Create a mechanism to detect which environments is currently targeted.
+- [x] Fix ENV prefix for `make` deploy script, just remove the environment string.
 
 ## Author
 
