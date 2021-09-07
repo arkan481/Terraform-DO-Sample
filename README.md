@@ -1,7 +1,7 @@
 # Welcome to TerraformDOSample 👋
 ![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg?cacheSeconds=2592000)
 [![Twitter: arkanharyo](https://img.shields.io/twitter/follow/arkanharyo.svg?style=social)](https://twitter.com/arkanharyo)
-![Build Push Deploy](https://github.com/github/arkan481/Terraform-DO-Sample/actions/workflows/build-push-deploy.yml/badge.svg)
+![Build Push Deploy](https://github.com/arkan481/Terraform-DO-Sample/workflows/Build,%20push%20to%20DockerHub%20and%20deploy%20to%20DigitalOcean%20Droplet/badge.svg)
 
 > CI/CD sample with Github Actions and Terraform to automate infrastructure provisioning and deploying to DigitalOcean cloud infrastructure provider.
 
@@ -162,6 +162,13 @@ ENV=<your-own-environment | staging | production> make deploy DOCKER_USERNAME=ch
 - [x] Separate environment variable for staging and production.
 - [x] Create a mechanism to detect which environments is currently targeted.
 - [x] Fix ENV prefix for `make` deploy script, just remove the environment string.
+
+## References
+Here are the list of useful and awesome resources that helped me during the learning process:
+- [Traversy Media](https://www.youtube.com/channel/UC29ju8bIPH5as8OGnQzwJyA) - 
+[DevOps Crash Course (Docker, Terraform, and Github Actions)](https://www.youtube.com/watch?v=OXE2a8dqIAI&t=2427s)
+- [Complete Terraform Course - Beginner to Advanced [2021]](https://www.udemy.com/course/complete-terraform-course-beginner-to-advanced/)
+- [DevOps Directive YouTube Channel](https://www.youtube.com/channel/UC4MdpjzjPuop_qWNAvR23JA)
 
 ## Author
 
