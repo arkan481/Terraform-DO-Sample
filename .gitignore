@@ -28,3 +28,10 @@ resource_assets.json
 
 # SSH Directory
 .ssh
+
+# Ansible runtime and backups
+*.original
+*.tmp
+*.bkp
+*.retry
+*.*~
