@@ -1,0 +1,51 @@
+- hosts: main-droplet
+  remote_user: root
+  become: yes
+  tasks:
+    - name: install python dependencies
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name: python3-pip
+    - name: install 'Docker SDK for Python'
+      pip:
+        name: docker
+    - name: Log into DockerHub
+      docker_login:
+        username: "{{ DOCKER_USERNAME }}"
+        password: "{{ DOCKER_PASSWORD }}"
+        email: "{{ DOCKER_EMAIL }}"
+    - name: pull docker image
+      docker_image:
+        name: "{{ REMOTE_TAG }}"
+        source: pull
+    - name: Stop the docker container
+      docker_container:
+        name: "{{ CONTAINER_NAME }}"
+        state: stopped
+      ignore_errors: yes
+    - name: Remove the docker container
+      docker_container:
+        name: "{{ CONTAINER_NAME }}"
+        state: absent
+      ignore_errors: yes
+    - name: Start the docker container
+      docker_container:
+        name: "{{ CONTAINER_NAME }}"
+        image: "{{ REMOTE_TAG }}"
+        state: started
+        ports:
+        - "80:5000"
+        env:
+            NODE_ENV: "{{ NODE_ENV }}"
+            PORT: "{{ PORT }}"
+            MONGO_URI_PRODUCTION: "{{ MONGO_URI_PRODUCTION }}"
+            GOOGLE_CLIENT_ID: "{{ GOOGLE_CLIENT_ID }}"
+            GOOGLE_CLIENT_SECRET: "{{ GOOGLE_CLIENT_SECRET }}"
+            FILE_UPLOAD_PATH: "{{ FILE_UPLOAD_PATH }}"
+            MAX_FILE_UPLOAD: "{{ MAX_FILE_UPLOAD }}"
+            JWT_SECRET: "{{ JWT_SECRET }}"
+            JWT_EXPIRE: "{{ JWT_EXPIRE }}"
+            JWT_COOKIE_EXPIRE: "{{ JWT_COOKIE_EXPIRE }}"
+            MONGO_CA_CERT_PATH: "{{ MONGO_CA_CERT_PATH }}"

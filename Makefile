@@ -105,3 +105,26 @@ deploy: check-env
 						-e JWT_COOKIE_EXPIRE=$(JWT_COOKIE_EXPIRE) \
 						-e MONGO_CA_CERT_PATH=config/ca-certificate-$(ENV).crt \
 						$(REMOTE_TAG)'
+
+## ANSIBLE OPERATIONS
+deploy-ansible: check-env
+	ansible-playbook \
+	-i ./ansible/$(ENV)/droplet-host.ini \
+	-e NODE_ENV=production \
+	-e PORT=5000 \
+	-e MONGO_URI_PRODUCTION="mongodb+srv://$(MONGODB_USER):$(MONGODB_PASSWORD)@$(MONGODB_HOST)" \
+	-e GOOGLE_CLIENT_ID=$(GOOGLE_CLIENT_ID) \
+	-e GOOGLE_CLIENT_SECRET=$(GOOGLE_CLIENT_SECRET) \
+	-e FILE_UPLOAD_PATH=./public/uploads \
+	-e MAX_FILE_UPLOAD=300000 \
+	-e JWT_SECRET=$(JWT_SECRET) \
+	-e JWT_EXPIRE=$(JWT_EXPIRE) \
+	-e JWT_COOKIE_EXPIRE=$(JWT_COOKIE_EXPIRE) \
+	-e MONGO_CA_CERT_PATH=config/ca-certificate-$(ENV).crt \
+	-e DOCKER_USERNAME=$(DOCKER_USERNAME) \
+	-e DOCKER_PASSWORD=$(DOCKER_PASSWORD) \
+	-e DOCKER_EMAIL=$(DOCKER_EMAIL) \
+	-e CONTAINER_NAME=$(CONTAINER_NAME) \
+	-e REMOTE_TAG=$(REMOTE_TAG) \
+	--private-key ./terraform/environments/$(ENV)/.ssh/id_rsa \
+	./ansible/site.yml
