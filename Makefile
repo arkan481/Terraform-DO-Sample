@@ -108,7 +108,7 @@ deploy: check-env
 
 ## ANSIBLE OPERATIONS
 deploy-ansible: check-env
-	ansible-playbook \
+	@ansible-playbook \
 	-i ./ansible/$(ENV)/droplet-host.ini \
 	-e NODE_ENV=production \
 	-e PORT=5000 \

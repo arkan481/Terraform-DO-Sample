@@ -20,16 +20,19 @@
       docker_image:
         name: "{{ REMOTE_TAG }}"
         source: pull
-    - name: Stop the docker container
-      docker_container:
-        name: "{{ CONTAINER_NAME }}"
-        state: stopped
-      ignore_errors: yes
-    - name: Remove the docker container
-      docker_container:
-        name: "{{ CONTAINER_NAME }}"
-        state: absent
-      ignore_errors: yes
+    - name: Stop and remove the docker container
+      block:
+        - name: Stop the docker container        
+          docker_container:
+            name: "{{ CONTAINER_NAME }}"
+            state: stopped
+        - name: Remove the docker container
+          docker_container:
+            name: "{{ CONTAINER_NAME }}"
+            state: absent
+      rescue: 
+        - debug: 
+            msg: "The Docker container coulnd't be found, probably a first time-run, continuing..."
     - name: Start the docker container
       docker_container:
         name: "{{ CONTAINER_NAME }}"
