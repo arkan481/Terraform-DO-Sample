@@ -1,4 +1,5 @@
 - hosts: main-droplet
+  gather_facts: no
   remote_user: root
   become: yes
   tasks:
