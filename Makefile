@@ -128,4 +128,5 @@ deploy-ansible: check-env
 	-e REMOTE_TAG=$(REMOTE_TAG) \
 	--private-key ./terraform/environments/$(ENV)/.ssh/id_rsa \
 	-vvv \
+	--timeout 120 \
 	./ansible/site.yml
