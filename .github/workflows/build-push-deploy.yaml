@@ -150,13 +150,4 @@ jobs:
 
       # Deploying to DigitalOcean droplet corresponding to the targeted environment, with Ansible.
       - name: Deploy-Ansible
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          # Required, playbook filepath
-          playbook: ./ansible/site.yml
-          # Optional, SSH private key
-          key: ${{secrets.PRIVATE_KEY_STAGING}}
-          # Optional, literal inventory file contents
-          inventory: |
-            [main-droplet]
-            ${{secrets.DROPLET_IP_STAGING}}
+        run: make deploy-ansible
