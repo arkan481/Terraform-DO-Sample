@@ -42,13 +42,11 @@ jobs:
             echo "MONGODB_USER=$MONGODB_USER_STAGING" >> $GITHUB_ENV
             echo "MONGODB_PASSWORD=$MONGODB_PASSWORD_STAGING" >> $GITHUB_ENV
             echo "MONGODB_HOST=$MONGODB_HOST_STAGING" >> $GITHUB_ENV
-            # echo "PRIVATE_KEY=$PRIVATE_KEY_STAGING" >> $GITHUB_ENV
           elif [[ ${GITHUB_REF##*/} =~ $PRODUCTION ]]; then
             echo "ENV=staging" >> $GITHUB_ENV
             echo "MONGODB_USER=$MONGODB_USER_PRODUCTION" >> $GITHUB_ENV
             echo "MONGODB_PASSWORD=$MONGODB_PASSWORD_PRODUCTION" >> $GITHUB_ENV
             echo "MONGODB_HOST=$MONGODB_HOST_PRODUCTION" >> $GITHUB_ENV
-            # echo "PRIVATE_KEY=$PRIVATE_KEY_PRODUCTION" >> $GITHUB_ENV
           else 
             echo "Invalid tag, environment not found"
             exit 1
@@ -87,10 +85,18 @@ jobs:
           make push
       
       # Installing DOCTL
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      # - name: Install doctl
+      #   uses: digitalocean/action-doctl@v2
+      #   with:
+      #     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}ˇ
+
+      # Installing Ansible
+      - name: Install Ansible with Homebrew
+        run: brew install ansible
+
+      # Disabling Ansible Host Key Checking
+      - name: Disabling Host Key checking for Ansible
+        run: export ANSIBLE_HOST_KEY_CHECKING=False
 
       # Configuring SSH in GitHub action runner / worker for STAGING.
       - name: Install SSH Key (Staging)
@@ -138,7 +144,11 @@ jobs:
           echo "${{ secrets.PRIVATE_KEY_PRODUCTION }}" > id_rsa
           chmod 400 id_rsa
       
-      # Deploying to DigitalOcean droplet corresponding to the targeted environment.
-      - name: Deploy
-        run: |-
-          make deploy
+      # # Deploying to DigitalOcean droplet corresponding to the targeted environment.
+      # - name: Deploy
+      #   run: |-
+      #     make deploy
+
+      # Deploying to DigitalOcean droplet corresponding to the targeted environment, with Ansible.
+      - name: Deploy-Ansible
+        run: make deploy-ansible
