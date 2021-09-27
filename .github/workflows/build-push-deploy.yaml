@@ -152,7 +152,7 @@ jobs:
           # Required, playbook filepath
           playbook: ./ansible/site.yml
           # Optional, SSH private key
-          key: ${{secrets.SSH_PRIVATE_KEY}}
+          key: ${{secrets.PRIVATE_KEY_STAGING}}
           # Optional, literal inventory file contents
           inventory: |
             [main-droplet]
