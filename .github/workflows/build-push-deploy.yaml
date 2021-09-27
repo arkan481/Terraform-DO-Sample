@@ -94,6 +94,7 @@ jobs:
       - name: Install Ansible with Homebrew
         run: brew install ansible
 
+      # Disabling Ansible Host Key Checking
       - name: Disabling Host Key checking for Ansible
         run: export ANSIBLE_HOST_KEY_CHECKING=False
 
