@@ -87,10 +87,14 @@ jobs:
           make push
       
       # Installing DOCTL
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      # - name: Install doctl
+      #   uses: digitalocean/action-doctl@v2
+      #   with:
+      #     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}ˇ
+
+      # Installing Ansible
+      - name: Install Ansible with Homebrew
+        run: brew install ansible
 
       # Configuring SSH in GitHub action runner / worker for STAGING.
       - name: Install SSH Key (Staging)
@@ -138,7 +142,11 @@ jobs:
           echo "${{ secrets.PRIVATE_KEY_PRODUCTION }}" > id_rsa
           chmod 400 id_rsa
       
-      # Deploying to DigitalOcean droplet corresponding to the targeted environment.
-      - name: Deploy
-        run: |-
-          make deploy
+      # # Deploying to DigitalOcean droplet corresponding to the targeted environment.
+      # - name: Deploy
+      #   run: |-
+      #     make deploy
+
+      # Deploying to DigitalOcean droplet corresponding to the targeted environment, with Ansible.
+      - name: Deploy-Ansible
+        run: make deploy-ansible
