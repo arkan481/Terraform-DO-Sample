@@ -121,14 +121,14 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.DROPLET_IP_PRODUCTION }} >> ~/.ssh/known_hosts
       
       # Creating a temp SSH directory and id_rsa private key in order to SSH into the droplet, a bit hacky but this will do for now. STAGING
-      # - name: Creating an SSH key (Staging)
-      #   if: ${{ env.ENV == 'staging' }} 
-      #   run: |-
-      #     cd terraform/environments/${ENV}
-      #     mkdir .ssh
-      #     cd .ssh
-      #     echo "${{ secrets.PRIVATE_KEY_STAGING }}" > id_rsa
-      #     chmod 400 id_rsa
+      - name: Creating an SSH key (Staging)
+        if: ${{ env.ENV == 'staging' }} 
+        run: |-
+          cd terraform/environments/${ENV}
+          mkdir .ssh
+          cd .ssh
+          echo "${{ secrets.PRIVATE_KEY_STAGING }}" > id_rsa
+          chmod 400 id_rsa
 
       # Creating a temp SSH directory and id_rsa private key in order to SSH into the droplet, a bit hacky but this will do for now. PRODUCTION
       - name: Creating an SSH key (Production)
@@ -157,5 +157,3 @@ jobs:
           inventory: |
             [main-droplet]
             ${{secrets.DROPLET_IP_STAGING}}
-          # Optional, SSH known hosts file content
-          known_hosts: ~/.ssh/known_hosts
