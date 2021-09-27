@@ -42,13 +42,11 @@ jobs:
             echo "MONGODB_USER=$MONGODB_USER_STAGING" >> $GITHUB_ENV
             echo "MONGODB_PASSWORD=$MONGODB_PASSWORD_STAGING" >> $GITHUB_ENV
             echo "MONGODB_HOST=$MONGODB_HOST_STAGING" >> $GITHUB_ENV
-            # echo "PRIVATE_KEY=$PRIVATE_KEY_STAGING" >> $GITHUB_ENV
           elif [[ ${GITHUB_REF##*/} =~ $PRODUCTION ]]; then
             echo "ENV=staging" >> $GITHUB_ENV
             echo "MONGODB_USER=$MONGODB_USER_PRODUCTION" >> $GITHUB_ENV
             echo "MONGODB_PASSWORD=$MONGODB_PASSWORD_PRODUCTION" >> $GITHUB_ENV
             echo "MONGODB_HOST=$MONGODB_HOST_PRODUCTION" >> $GITHUB_ENV
-            # echo "PRIVATE_KEY=$PRIVATE_KEY_PRODUCTION" >> $GITHUB_ENV
           else 
             echo "Invalid tag, environment not found"
             exit 1
@@ -149,4 +147,15 @@ jobs:
 
       # Deploying to DigitalOcean droplet corresponding to the targeted environment, with Ansible.
       - name: Deploy-Ansible
-        run: make deploy-ansible
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          # Required, playbook filepath
+          playbook: ./ansible/site.yml
+          # Optional, SSH private key
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          # Optional, literal inventory file contents
+          inventory: |
+            [main-droplet]
+            ${{secrets.DROPLET_IP_STAGING}}
+          # Optional, SSH known hosts file content
+          known_hosts: ~/.ssh/known_hosts
